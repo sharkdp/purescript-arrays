@@ -85,14 +85,10 @@ module Data.Array
 
   , nub
   , nubBy
-  , union
-  , unionBy
   , delete
   , deleteBy
 
   , (\\), difference
-  , intersect
-  , intersectBy
 
   , zipWith
   , zipWithA
@@ -519,17 +515,6 @@ nubBy eq xs =
     Just o -> o.head : nubBy eq (filter (\y -> not (o.head `eq` y)) o.tail)
     Nothing -> []
 
--- | Calculate the union of two lists.
--- |
--- | Running time: `O(n^2)`
-union :: forall a. Eq a => Array a -> Array a -> Array a
-union = unionBy (==)
-
--- | Calculate the union of two arrays, using the specified function to
--- | determine equality of elements.
-unionBy :: forall a. (a -> a -> Boolean) -> Array a -> Array a -> Array a
-unionBy eq xs ys = xs <> foldl (flip (deleteBy eq)) (nubBy eq ys) xs
-
 -- | Delete the first element of an array which is equal to the specified value,
 -- | creating a new array.
 delete :: forall a. Eq a => a -> Array a -> Array a
@@ -550,15 +535,6 @@ difference xs ys
   | otherwise = uncons' (const xs) (\z zs -> delete z xs \\ zs) ys
 
 infix 5 difference as \\
-
--- | Calculate the intersection of two arrays, creating a new array.
-intersect :: forall a. Eq a => Array a -> Array a -> Array a
-intersect = intersectBy eq
-
--- | Calculate the intersection of two arrays, using the specified equivalence
--- | relation to compare elements, creating a new array.
-intersectBy :: forall a. (a -> a -> Boolean) -> Array a -> Array a -> Array a
-intersectBy eq xs ys = filter (\x -> isJust (findIndex (eq x) ys)) xs
 
 -- | Apply a function to pairs of elements at the same index in two arrays,
 -- | collecting the results in a new array.

@@ -7,7 +7,7 @@ import Control.Monad.Eff.Console (log, CONSOLE)
 import Data.Foldable (for_, foldMapDefaultR, class Foldable, all)
 import Test.Assert (assert)
 
-import Data.Array (range, foldM, unzip, zip, zipWithA, zipWith, intersectBy, intersect, (\\), deleteBy, delete, unionBy, union, nubBy, nub, groupBy, group', group, span, dropWhile, drop, takeWhile, take, sortBy, sort, catMaybes, mapMaybe, filterM, filter, concat, concatMap, reverse, alterAt, modifyAt, updateAt, deleteAt, insertAt, findLastIndex, findIndex, elemLastIndex, elemIndex, (!!), uncons, init, tail, last, head, insertBy, insert, snoc, (:), length, null, replicate, replicateM, singleton, fromFoldable)
+import Data.Array (range, foldM, unzip, zip, zipWithA, zipWith, (\\), deleteBy, delete, nubBy, nub, groupBy, group', group, span, dropWhile, drop, takeWhile, take, sortBy, sort, catMaybes, mapMaybe, filterM, filter, concat, concatMap, reverse, alterAt, modifyAt, updateAt, deleteAt, insertAt, findLastIndex, findIndex, elemLastIndex, elemIndex, (!!), uncons, init, tail, last, head, insertBy, insert, snoc, (:), length, null, replicate, replicateM, singleton, fromFoldable)
 import Data.Maybe (Maybe(..), isNothing, fromJust)
 import Data.Tuple (Tuple(..))
 
@@ -254,13 +254,6 @@ testArray = do
   let nubPred = \x y -> if odd x then false else x == y
   assert $ nubBy nubPred [1, 2, 2, 3, 3, 4, 4, 1] == [1, 2, 3, 3, 4, 1]
 
-  log "union should produce the union of two arrays"
-  assert $ union [1, 2, 3] [2, 3, 4] == [1, 2, 3, 4]
-  assert $ union [1, 1, 2, 3] [2, 3, 4] == [1, 1, 2, 3, 4]
-
-  log "unionBy should produce the union of two arrays using the specified equality relation"
-  assert $ unionBy (\_ y -> y < 5) [1, 2, 3] [2, 3, 4, 5, 6] == [1, 2, 3, 5, 6]
-
   log "delete should remove the first matching item from an array"
   assert $ delete 1 [1, 2, 1] == [2, 1]
   assert $ delete 2 [1, 2, 1] == [1, 1]
@@ -271,12 +264,6 @@ testArray = do
 
   log "(\\\\) should return the difference between two lists"
   assert $ [1, 2, 3, 4, 3, 2, 1] \\ [1, 1, 2, 3] == [4, 3, 2]
-
-  log "intersect should return the intersection of two arrays"
-  assert $ intersect [1, 2, 3, 4, 3, 2, 1] [1, 1, 2, 3] == [1, 2, 3, 3, 2, 1]
-
-  log "intersectBy should return the intersection of two arrays using the specified equivalence relation"
-  assert $ intersectBy (\x y -> (x * 2) == y) [1, 2, 3] [2, 6] == [1, 3]
 
   log "zipWith should use the specified function to zip two lists together"
   assert $ zipWith (\x y -> [show x, y]) [1, 2, 3] ["a", "b", "c"] == [["1", "a"], ["2", "b"], ["3", "c"]]
